@@ -2,6 +2,7 @@
 ### 1. 导入数据
 #### 1.1 从链接
 ```python
+将下载数据保存为auto-mpg.data。
 dataset_path = keras.utils.get_file("auto-mpg.data", "http://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data")
 ```
 #### 1.2 从keras数据集
@@ -52,6 +53,10 @@ dataset['Japan'] = (origin == 3)*1.0
 - get_dummies
 ```python
 dataset = pd.get_dummies(dataset)
+```
+- to_categorical
+```python
+one_hot_labels = keras.utils.to_categorical(labels, num_classes=10)
 ```
 #### 2.3 标准化
 - 手动
@@ -115,12 +120,29 @@ model.compile(loss='mean_squared_error', optimizer='sgd')
 ...  
 [keara损失函数](https://keras.io/zh/losses/)
 #### 2.3 性能评估函数keras.metrics
-用于评价模型表现的函数。对于分类问题，metrics=["accuracy"]。
+用于评价模型表现的函数。与损失函数类似，唯一的不同在于性能评估的结果不会用于训练模型。任何损失函数都可以被用于性能评估。对于分类问题，总是希望metrics=["accuracy"]。
 ```python
 def mean_pred(y_true, y_pred):
     return K.mean(y_pred)
-
+# 可以传入函数名称，或者内部函数，或自定义函数。
 model.compile(optimizer='rmsprop',
               loss='binary_crossentropy',
-              metrics=['accuracy', mean_pred])
+              metrics=[metrics.mae, 'accuracy', mean_pred])
+```
+### 3. 模型训练keras.fit()
+```python
+fit(x=None, y=None, batch_size=None, epochs=1, verbose=1, callbacks=None, validation_split=0.0, validation_data=None, shuffle=True, class_weight=None, sample_weight=None, initial_epoch=0, steps_per_epoch=None, validation_steps=None, validation_freq=1, max_queue_size=10, workers=1, use_multiprocessing=False)
+```
+- batch_size 每次梯度更新使用的样本数量，不指定的情况下默认32。
+- epochs 一个epoch代表将整个数据集迭代一遍。epochs给出最后一个epoch的序号。
+- verbose 取值0 = silent，1 = progress bar，2 = one line per epoch。
+- validation_split 用作验证的数据比例。用作验证的数据不参与训练，但会在每个epoch的结束评估loss和metrics函数。
+- validation_data tuple(x_val, y_val)，会覆盖validation_split。
+- shuffle 是否在每个epoch之前打乱训练数据。
+- initial_epoch 从第几个epoch开始训练（恢复训练）。
+- steps_per_epoch 每个epoch训练的步数（batch数）。
+  
+### 4. 模型评估keras.evaluate()
+```python
+evaluate(x=None, y=None, batch_size=None, verbose=1, sample_weight=None, steps=None, callbacks=None, max_queue_size=10, workers=1, use_multiprocessing=False)
 ```
