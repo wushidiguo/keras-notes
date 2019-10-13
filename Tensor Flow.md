@@ -65,11 +65,62 @@ def norm(x):
     return (x - train_stats['mean']) / train_stats['std']
 ```
 ## 二. 模型
-### 1. 神经网络
-1.1 顺序模型
+### 1. 模型构建keras.Sequential() 
 ```python
+# 通过将层的实例列表作为参数。
 model = keras.Sequential([
     layers.Dense(64, activation='relu', input_shape=[len(train_dataset.keys())]),
     layers.Dense(64, activation='relu'),
     layers.Dense(1)
   ])
+
+# 通过.add()方法。
+model = Sequential()
+model.add(Dense(32, input_dim=784))
+model.add(Activation('relu'))
+
+# Sequential的第一层且只有第一层，需要接收输入的形状信息。注意，input_shape不包含batch大小，但可以通过batch_size另行指定。
+model = Sequential()
+model.add(Dense(32, input_shape=(784,)))
+# 等效于
+model = Sequential()
+model.add(Dense(32, input_dim=784))
+```
+keras提供了各种层，有时间慢慢读官方文档吧。[keras核心层](https://keras.io/layers/core/)
+
+### 2. 模型编译model.compile() 
+compilation，定义学习过程。通过compile方法，接收三个参数：
+#### 2.1 优化器keras.optimizers
+```python
+# 传入优化器实例。
+sgd = optimizers.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
+model.compile(loss='mean_squared_error', optimizer=sgd)
+# 或传入优化器名称，使用默认参数。
+model.compile(loss='mean_squared_error', optimizer='sgd')
+```
+keras提供了各种优化器。[keras优化器](https://keras.io/optimizers/)
+#### 2.2 损失函数keras.losses  
+损失函数接收两个参数y_true和y_pred。并为每一个数据点返回一个标量。
+```python
+# 传入函数。
+model.compile(loss=losses.mean_squared_error, optimizer='sgd')
+# 或传入函数名称。
+model.compile(loss='mean_squared_error', optimizer='sgd')
+```
+- mean_squared_error 均方误差
+- mean_absolute_error 平均绝对误差
+- categorical_crossentropy 交叉熵（targets是one-hot编码）
+- sparse_categorical_crossentropy （targets是数字编码）
+- binary_crossentropy （一般用于二分类）  
+...  
+[keara损失函数](https://keras.io/zh/losses/)
+#### 2.3 性能评估函数keras.metrics
+用于评价模型表现的函数。对于分类问题，metrics=["accuracy"]。
+```python
+def mean_pred(y_true, y_pred):
+    return K.mean(y_pred)
+
+model.compile(optimizer='rmsprop',
+              loss='binary_crossentropy',
+              metrics=['accuracy', mean_pred])
+```
