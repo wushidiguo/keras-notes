@@ -129,7 +129,8 @@ W = np.random.randn(node_num, node_num) / np.sqrt(node_num)
 #### Dropout
 Dropout是一种在学习的过程中随机删除（隐藏层）神经元的方法。被删除的神经元不再进行信号传递。如图所示：
 
-![Dropout概念图](https://user-gold-cdn.xitu.io/2019/10/3/16d90a8e70428287?w=663&h=296&f=png&s=109454)
+![Dropout概念图](https://user-gold-cdn.xitu.io/2019/10/3/16d90a8e70428287?w=663&h=296&f=png&s=109454)  
+
 测试时，会传递所有的神经元信号，各个神经元的输出，要乘上训练时的删除比例后再输出。可以理解为，每一次让不同的模型进行学习，推理时区模型的平均值。
 
 ```python
@@ -176,14 +177,16 @@ $$y _i \leftarrow \gamma \hat x_i + \beta$$
 - **填充（padding)**：向输入数据的周围填入固定的数据（比如0等），称为填充。其目的是为了调整输出的大小。
 ![padding](https://user-gold-cdn.xitu.io/2019/10/4/16d948d29c397945?w=530&h=225&f=png&s=35532)
 - **步幅（stride）**：应用滤波器的位置间隔称为步幅。
-![步幅为2的卷积](https://user-gold-cdn.xitu.io/2019/10/4/16d949104ed99ff9?w=530&h=379&f=png&s=50866)
+![步幅为2的卷积](https://user-gold-cdn.xitu.io/2019/10/4/16d949104ed99ff9?w=530&h=379&f=png&s=50866)  
+
 对于输入(H, W)，滤波器(FH, FW)，输出(OH, OW)，填充P，步幅S。则
 $$OH=\frac{H+2P-FH}{S}+1$$
 $$OW=\frac{W+2P-FW}{S}+1$$
 - **3维数据卷积**：
 在3维数据的卷积运算中，滤波器的通道数要和输入数据的通道数保持一致。按通道进行输入数据和滤波器的卷积运算，并将结果相加，从而得到输出。
 
-![3维数据卷积运算](https://user-gold-cdn.xitu.io/2019/10/4/16d958409790467e?w=531&h=213&f=png&s=33940)
+![3维数据卷积运算](https://user-gold-cdn.xitu.io/2019/10/4/16d958409790467e?w=531&h=213&f=png&s=33940)  
+
 通过应用FN个滤波器，可以得到具有FN个通道的输出。此时滤波器的全中数据要按照(output_channel, input_channel, height, width)的顺序书写。偏置的形状时(FN, 1, 1)。完整的处理流如下：
 
 ![卷积运算的处理流](https://user-gold-cdn.xitu.io/2019/10/4/16d9596216c1704b?w=827&h=284&f=png&s=58831)
