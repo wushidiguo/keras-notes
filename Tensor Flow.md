@@ -104,6 +104,47 @@ model.compile(loss='mean_squared_error', optimizer=sgd)
 model.compile(loss='mean_squared_error', optimizer='sgd')
 ```
 keras提供了各种优化器。[keras优化器](https://keras.io/optimizers/)
+- SGD 随机梯度下降
+```python
+# momentum，float>=0，起到加速和抑制震荡的作用。nesterov，是否应用Nesterov momentum（对传统momentum方法的改进。）
+keras.optimizers.SGD(learning_rate=0.01, momentum=0.0, nesterov=False)
+```
+- RMSprop
+```python
+# 除学习率以外，不建议改动默认参数。
+keras.optimizers.RMSprop(learning_rate=0.001, rho=0.9)
+```
+- Adagrad
+```python
+# 更新参数时，变动较大（被大幅更新)的元素学习率将变小。
+keras.optimizers.Adagrad(learning_rate=0.01)
+```
+- Adadelta
+```python
+# 是对Adagrad的拓展，具有更好的鲁棒性。不建议改动默认参数，包括学习率。
+keras.optimizers.Adadelta(learning_rate=1.0, rho=0.95)
+```
+- Adam
+```python
+# RMSprop和momentum的结合。
+keras.optimizers.Adam(learning_rate=0.001, beta_1=0.9, beta_2=0.999, amsgrad=False)
+```
+- Adamax
+```python
+# Adam的变种，基于无穷范数。
+keras.optimizers.Adamax(learning_rate=0.002, beta_1=0.9, beta_2=0.999)
+```
+- Nadam
+```python
+# RMSprop和Nesterov momentum的结合。不建议改动默认参数。
+keras.optimizers.Nadam(learning_rate=0.002, beta_1=0.9, beta_2=0.999)
+```
+- 共有参数（梯度裁剪）
+```python
+# 限制梯度的L2范数的最大值为1。
+sgd = optimizers.SGD(lr=0.01, clipnorm=1.)
+# 限制梯度的L2范数的取值区间为[-0.5, 0.5]。
+sgd = optimizers.SGD(lr=0.01, clipvalue=0.5)
 #### 2.2 损失函数keras.losses  
 损失函数接收两个参数y_true和y_pred。并为每一个数据点返回一个标量。
 ```python
