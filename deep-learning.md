@@ -383,5 +383,6 @@ class simpleConvNet:
 ```
  此处似乎有错误。在pooling层之后，少了flatten的步骤，而直接与affine层连接。下图是比较正确的连接方式。
  
-![卷积神经网络](https://user-gold-cdn.xitu.io/2019/10/6/16d9eefb96df00c7?w=1644&h=880&f=jpeg&s=216825)
+![卷积神经网络](https://user-gold-cdn.xitu.io/2019/10/6/16d9eefb96df00c7?w=1644&h=880&f=jpeg&s=216825)  
+
 现在的CNN中主要使用ReLU作为激活函数。随着CNN层次加深，提取的信息也愈加复杂、抽象。叠加小型滤波器来加深网络的好处是可以减少参数的数量，扩大感受野（receptive field， 给神经元施加变化的某个局部空间区域）。并且，通过叠加层，将ReLU等激活函数夹在卷积层的中间，进一步提高了网络的表现力。
